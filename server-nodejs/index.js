@@ -1,49 +1,73 @@
 const express = require("express");
-const cors = require("cors");
-const axios = require("axios");
-
 const app = express();
+const http = require("http").Server(app);
+const cors = require("cors");
+const socketIO = require("socket.io")(http, {
+  cors: {
+    origin: ["http://10.0.2.2:19006", "http://localhost:19006"],
+    methods: ["GET", "POST"],
+  },
+});
+
+const PORT = 4000;
+
+function createUniqueId() {
+  return Math.random().toString(20).substring(2, 10);
+}
+
+let chatgroups = [];
+
+app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-app.use(cors({ origin: true }));
+app.use(cors());
 
-const CHAT_ENGINE_PROJECT_ID = "";
-const CHAT_ENGINE_PRIVATE_KEY = "";
+socketIO.on("connection", (socket) => {
+  console.log(`${socket.id} user is just connected`);
 
-app.post("/signup", async (req, res) => {
-  const { username, secret, email, first_name, last_name } = req.body;
+  socket.on("getAllGroups", () => {
+    socket.emit("groupList", chatgroups);
+  });
 
-  // Store a user-copy on Chat Engine!
-  // Docs at rest.chatengine.io
-  try {
-    const r = await axios.post(
-      "https://api.chatengine.io/users/",
-      { username, secret, email, first_name, last_name },
-      { headers: { "Private-Key": CHAT_ENGINE_PRIVATE_KEY } }
-    );
-    return res.status(r.status).json(r.data);
-  } catch (e) {
-    return res.status(e.response.status).json(e.response.data);
-  }
-});
-
-app.post("/login", async (req, res) => {
-  const { username, secret } = req.body;
-
-  // Fetch this user from Chat Engine in this project!
-  // Docs at rest.chatengine.io
-  try {
-    const r = await axios.get("https://api.chatengine.io/users/me/", {
-      headers: {
-        "Project-ID": CHAT_ENGINE_PROJECT_ID,
-        "User-Name": username,
-        "User-Secret": secret,
-      },
+  socket.on("createNewGroup", (currentGroupName) => {
+    console.log(currentGroupName);
+    chatgroups.unshift({
+      id: chatgroups.length + 1,
+      currentGroupName,
+      messages: [],
     });
-    return res.status(r.status).json(r.data);
-  } catch (e) {
-    return res.status(e.response.status).json(e.response.data);
-  }
+    socket.emit("groupList", chatgroups);
+  });
+
+  socket.on("findGroup", (id) => {
+    const filteredGroup = chatgroups.filter((item) => item.id === id);
+    socket.emit("foundGroup", filteredGroup[0].messages);
+  });
+
+  socket.on("newChatMessage", (data) => {
+    const { currentChatMesage, groupIdentifier, currentUser, timeData } = data;
+    const filteredGroup = chatgroups.filter(
+      (item) => item.id === groupIdentifier
+    );
+    const newMessage = {
+      id: createUniqueId(),
+      text: currentChatMesage,
+      currentUser,
+      time: `${timeData.hr}:${timeData.mins}`,
+    };
+
+    socket
+      .to(filteredGroup[0].currentGroupName)
+      .emit("groupMessage", newMessage);
+    filteredGroup[0].messages.push(newMessage);
+    socket.emit("groupList", chatgroups);
+    socket.emit("foundGroup", filteredGroup[0].messages);
+  });
 });
 
-// vvv On port 3001!
-app.listen(3001);
+app.get("/api", (req, res) => {
+  res.json(chatgroups);
+});
+
+http.listen(PORT, () => {
+  console.log(`Server is listeing on ${PORT}`);
+});
