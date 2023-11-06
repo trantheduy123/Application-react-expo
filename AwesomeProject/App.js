@@ -4,27 +4,32 @@ import { Login, Signup, Welcome } from "./screens";
 const Stack = createNativeStackNavigator();
 
  */
-import { StatusBar } from "expo-status-bar";
-import { StyleSheet } from "react-native";
-import Homescreen from "./screens/Homescreen";
-import Chatscreen from "./screens/Chatscreen";
-import Messagescreen from "./screens/Messagescreen";
+import { Welcome } from './screens';
+import { StatusBar } from 'expo-status-bar';
+import { StyleSheet } from 'react-native';
+import Homescreen from './screens/Homescreen';
+import Chatscreen from './screens/Chatscreen';
+import Messagescreen from './screens/Messagescreen';
 
-import { NavigationContainer } from "@react-navigation/native";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import GlobalState from "./context";
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import GlobalState from './context';
 
 const Stack = createNativeStackNavigator();
 
-
-
 export default function App() {
-  
   return (
     <GlobalState>
       <NavigationContainer>
         <Stack.Navigator>
           {/* all the screens here */}
+          <Stack.Screen
+            name="Welcome"
+            component={Welcome}
+            options={{
+              headerShown: false,
+            }}
+          />
           <Stack.Screen
             name="Homescreen"
             component={Homescreen}
@@ -72,8 +77,8 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });

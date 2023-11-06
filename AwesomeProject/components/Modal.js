@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState } from 'react';
 import {
   Alert,
   Modal,
@@ -9,9 +9,10 @@ import {
   TextInput,
   StatusBar,
   Keyboard,
-} from "react-native";
-import { GlobalContext } from "../context";
-import { socket } from "../utils";
+} from 'react-native';
+import { GlobalContext } from '../context';
+import { socket } from '../utils';
+import COLORS from '../constants/colors';
 
 const NewGroupModal = () => {
   const {
@@ -23,9 +24,9 @@ const NewGroupModal = () => {
 
   function handleCreateNewRoom() {
     console.log(currentGroupName);
-    socket.emit("createNewGroup", currentGroupName);
+    socket.emit('createNewGroup', currentGroupName);
     setModalVisible(false);
-    setCurrentGroupName("");
+    setCurrentGroupName('');
     Keyboard.dismiss();
   }
 
@@ -35,7 +36,7 @@ const NewGroupModal = () => {
       transparent={true}
       visible={modalVisible}
       onRequestClose={() => {
-        Alert.alert("Modal has been closed.");
+        Alert.alert('Modal has been closed.');
         setModalVisible(!modalVisible);
       }}
     >
@@ -72,16 +73,16 @@ const NewGroupModal = () => {
 const styles = StyleSheet.create({
   centeredView: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   modalView: {
     margin: 20,
-    backgroundColor: "white",
+    backgroundColor: 'white',
     borderRadius: 20,
     padding: 35,
     // alignItems: "center",
-    shadowColor: "#000",
+    shadowColor: '#000',
     shadowOffset: {
       width: 0,
       height: 2,
@@ -91,13 +92,13 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   textStyle: {
-    color: "white",
-    fontWeight: "bold",
-    textAlign: "center",
+    color: 'white',
+    fontWeight: 'bold',
+    textAlign: 'center',
   },
   modalText: {
     marginBottom: 15,
-    textAlign: "center",
+    textAlign: 'center',
   },
   loginInput: {
     borderRadius: 50,
@@ -105,21 +106,25 @@ const styles = StyleSheet.create({
     padding: 8,
   },
   button: {
-    backgroundColor: "#703efe",
     padding: 15,
     marginVertical: 10,
+    width: '50%',
     elevation: 1,
-    borderRadius: 50,
+    borderRadius: 20,
+    borderColor: COLORS.primary,
+    borderWidth: 2,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   buttonWrapper: {
-    flexDirection: "row",
+    flexDirection: 'row',
     gap: 10,
   },
   buttonText: {
-    textAlign: "center",
-    color: "#fff",
-    fontWeight: "bold",
+    textAlign: 'center',
+    fontWeight: 'bold',
     fontSize: 15,
+    color: COLORS.primary,
   },
 });
 

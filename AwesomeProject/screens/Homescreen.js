@@ -7,10 +7,11 @@ import {
   Text,
   TextInput,
   View,
-} from "react-native";
-import homeImage from "../assets/home-image.jpg";
-import { useContext, useEffect } from "react";
-import { GlobalContext } from "../context";
+} from 'react-native';
+import homeImage from '../assets/home-image.jpg';
+import { useContext, useEffect } from 'react';
+import { GlobalContext } from '../context';
+import COLORS from '../constants/colors';
 
 export default function Homescreen({ navigation }) {
   const {
@@ -25,14 +26,14 @@ export default function Homescreen({ navigation }) {
   } = useContext(GlobalContext);
 
   function handleRegisterAndSignIn(isLogin) {
-    if (currentUserName.trim() !== "") {
+    if (currentUserName.trim() !== '') {
       const index = allUsers.findIndex(
         (userItem) => userItem === currentUserName
       );
 
       if (isLogin) {
         if (index === -1) {
-          Alert.alert("Please register first");
+          Alert.alert('Please register first');
         } else {
           setCurrentUser(currentUserName);
         }
@@ -42,20 +43,20 @@ export default function Homescreen({ navigation }) {
           setAllUsers(allUsers);
           setCurrentUser(currentUserName);
         } else {
-          Alert.alert("Already registered ! Please login");
+          Alert.alert('Already registered ! Please login');
         }
       }
 
-      setCurrentUserName("");
+      setCurrentUserName('');
     } else {
-      Alert.alert("User name field is empty");
+      Alert.alert('User name field is empty');
     }
 
     Keyboard.dismiss();
   }
 
   useEffect(() => {
-    if (currentUser.trim() !== "") navigation.navigate("Chatscreen");
+    if (currentUser.trim() !== '') navigation.navigate('Chatscreen');
   }, [currentUser]);
 
   console.log(allUsers, currentUser);
@@ -121,31 +122,31 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   homeImage: {
-    width: "100%",
+    width: '100%',
     flex: 3,
-    justifyContent: "center",
+    justifyContent: 'center',
   },
   content: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-    width: "100%",
-    backgroundColor: "#fff",
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '100%',
+    backgroundColor: '#fff',
   },
   infoBlock: {
-    width: "100%",
-    alignItems: "center",
-    justifyContent: "center",
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   heading: {
     fontSize: 28,
-    fontWeight: "bold",
-    color: "#000",
+    fontWeight: 'bold',
+    color: '#000',
     marginBottom: 10,
   },
   subHeading: {
     fontSize: 15,
-    color: "#acacac",
+    color: '#acacac',
     marginBottom: 15,
   },
   loginInput: {
@@ -154,21 +155,24 @@ const styles = StyleSheet.create({
     padding: 8,
   },
   button: {
-    backgroundColor: "#703efe",
     padding: 15,
     marginVertical: 10,
-    width: "34%",
+    width: '34%',
     elevation: 1,
-    borderRadius: 50,
+    borderColor: COLORS.primary,
+    borderWidth: 2,
+    borderRadius: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   buttonWrapper: {
-    flexDirection: "row",
+    flexDirection: 'row',
     gap: 10,
   },
   buttonText: {
-    textAlign: "center",
-    color: "#fff",
-    fontWeight: "bold",
+    textAlign: 'center',
+    fontWeight: 'bold',
     fontSize: 15,
+    color: COLORS.primary,
   },
 });

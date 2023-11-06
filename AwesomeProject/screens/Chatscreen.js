@@ -1,4 +1,4 @@
-import { useContext, useEffect } from "react";
+import { useContext, useEffect } from 'react';
 import {
   FlatList,
   Pressable,
@@ -6,12 +6,14 @@ import {
   StyleSheet,
   Text,
   View,
-} from "react-native";
-import { GlobalContext } from "../context";
-import { AntDesign } from "@expo/vector-icons";
-import Chatcomponent from "../components/Chatcomponent";
-import NewGroupModal from "../components/Modal";
-import { socket } from "../utils";
+} from 'react-native';
+import { GlobalContext } from '../context';
+import { AntDesign } from '@expo/vector-icons';
+import Chatcomponent from '../components/Chatcomponent';
+import NewGroupModal from '../components/Modal';
+import { socket } from '../utils';
+import COLORS from '../constants/colors';
+
 export default function Chatscreen({ navigation }) {
   const {
     currentUser,
@@ -24,31 +26,30 @@ export default function Chatscreen({ navigation }) {
   } = useContext(GlobalContext);
 
   useEffect(() => {
-    socket.emit("getAllGroups");
+    socket.emit('getAllGroups');
 
-    socket.on("groupList", (groups) => {
-      console.log(groups, "hhhhhhhhhhhhhhhhhhhhhhh");
+    socket.on('groupList', (groups) => {
+      console.log(groups, 'hhhhhhhhhhhhhhhhhhhhhhh');
       setAllChatRooms(groups);
     });
   }, [socket]);
 
   function handleLogout() {
-    setCurrentUser("");
+    setCurrentUser('');
     setShowLoginView(false);
   }
 
   useEffect(() => {
-    if (currentUser.trim() === "") navigation.navigate("Homescreen");
+    if (currentUser.trim() === '') navigation.navigate('Homescreen');
   }, [currentUser]);
 
   return (
-    
     <View style={styles.mainWrapper}>
       <View style={styles.topContainer}>
         <View style={styles.header}>
           <Text style={styles.heading}>Welcome {currentUser}!</Text>
           <Pressable onPress={handleLogout}>
-            <AntDesign name="logout" size={30} color={"black"} />
+            <AntDesign name="logout" size={30} color={'black'} />
           </Pressable>
         </View>
       </View>
@@ -70,33 +71,32 @@ export default function Chatscreen({ navigation }) {
       </View>
       {modalVisible && <NewGroupModal />}
     </View>
-    
   );
 }
 
 const styles = StyleSheet.create({
   mainWrapper: {
-    backgroundColor: "#eee",
+    backgroundColor: '#eee',
     flex: 1,
   },
   topContainer: {
-    backgroundColor: "#fff",
+    backgroundColor: '#fff',
     height: 70,
-    width: "100%",
+    width: '100%',
     padding: 20,
-    justifyContent: "center",
+    justifyContent: 'center',
     marginBottom: 15,
     flex: 0.3,
   },
   header: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   heading: {
     fontSize: 30,
-    fontWeight: "bold",
-    textDecorationLine: "underline",
+    fontWeight: 'bold',
+    textDecorationLine: 'underline',
   },
   listContainer: {
     flex: 3.4,
@@ -107,16 +107,18 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   button: {
-    backgroundColor: "#703efe",
     padding: 12,
-    width: "100%",
+    width: '100%',
     elevation: 1,
     borderRadius: 50,
+    borderColor: COLORS.primary,
+    borderWidth: 2,
+    borderRadius: 12,
   },
   buttonText: {
-    textAlign: "center",
-    color: "#fff",
-    fontWeight: "bold",
-    fontSize: 20,
+    textAlign: 'center',
+    fontWeight: 'bold',
+    fontSize: 15,
+    color: COLORS.primary,
   },
 });
